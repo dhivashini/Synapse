@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>VR HomePage</title>
+    <meta name="description" content="ShopVR SelectionPage - A-Frame">
+    <script src="https://rawgit.com/aframevr/aframe/917c06889ee1f3f79b7b1bbd9eab9815f9512503/dist/aframe.min.js"></script>
+    <script src="https://npmcdn.com/aframe-animation-component@3.0.1"></script>
+    <script src="https://npmcdn.com/aframe-event-set-component@3.0.1"></script>
+    <script src="https://npmcdn.com/aframe-layout-component@3.0.1"></script>
+    <script src="https://npmcdn.com/aframe-template-component@3.0.1"></script>
+        <script src="components360/set-image.js"></script>
+    <script src="components360/update-raycaster.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  </head>
+  <body>
+    <a-scene auto-enter-vr>
+      <a-assets>
+        <img id="city" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/city.jpg">
+        <img id="jersey-thumb" crossorigin="anonymous" src="staticVR/Option2.JPG">
+        <img id="handbag-thumb" crossorigin="anonymous" src="staticVR/Option1.JPG">
+        <img id="accessories-thumb" crossorigin="anonymous" src="staticVR/Option3.JPG">
+        <img id="checkout-thumb" crossorigin="anonymous" src="staticVR/Checkout.JPG">
+        <audio id="click-sound" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/audio/click.ogg"></audio>
+        
+        <!-- Image link template to be reused. -->
+        <script id="link" type="text/nunjucks">
+          <a-plane class="link" height="1" width="1"
+            material="shader: flat; src: {{ thumb }}"
+            event-set__1="_event: mousedown; scale: 1 1 1"
+            event-set__2="_event: mouseup; scale: 1.2 1.2 1"
+            event-set__3="_event: mouseenter; scale: 1.2 1.2 1"
+            event-set__4="_event: mouseleave; scale: 1 1 1"
+            set-image="on: click; target: #image-360; src: {{ src }}"
+            sound="on: click; src: #click-sound"
+            update-raycaster="#cursor"></a-plane>
+        </script>
+      </a-assets>
+
+      <!-- 360-degree image. -->
+        <a-sky id="image-360" radius="10" src="#city"></a-sky>
+      <!-- Image links. -->
+      <a-entity id="links" layout="type: line; margin: 1.5" position="-2 -1 -4">
+        <a-entity template="src: #link" onClick="location.href='staticVR/Handbags.html'" data-thumb="#handbag-thumb"></a-entity>
+        <a-entity template="src: #link" onClick="location.href='staticVR/Jerseys.html'" data-thumb="#jersey-thumb"></a-entity>
+        <a-entity template="src: #link" onClick="location.href='staticVR/Accessory.html'" data-thumb="#accessories-thumb"></a-entity>
+        
+      </a-entity>
+
+      <!-- Camera + cursor. -->
+      <a-entity camera look-controls>
+        <a-cursor id="cursor"
+          animation__click="property: scale; startEvents: click; from: 0.1 0.1 0.1; to: 1 1 1; dur: 150"
+          animation__fusing="property: fusing; startEvents: fusing; from: 1 1 1; to: 0.1 0.1 0.1; dur: 1500"
+          event-set__1="_event: mouseenter; color: springgreen"
+          event-set__2="_event: mouseleave; color: black"
+          raycaster="objects: .link"></a-cursor>
+      </a-entity>
+        
+        <a-image id="checkoutBtn" src="#checkout-thumb" position="3.5 -1 -4" onclick="checkout();"></a-image>
+        
+    </a-scene>
+    <script>
+        var user="Default";
+      function checkout(){
+          var temp=sessionStorage.getItem('cart');
+          var loggedAs= sessionStorage.getItem('loggedInAs');
+          alert("Check-Out Successful !"+loggedAs);
+//          $.ajax({
+//                            url: "/getuser",
+//                            type: "POST",
+//                            contentType: "application/json",
+//                            processData: false,
+//                            complete: function (data , err) {
+//                                console.log("inside ajax call to /getuser");
+//                                res = data.responseText;
+//                                user = res;
+//                                console.log("getusername User is: ", res);
+//                            }
+//                     });
+          var payload = { 
+                            name: loggedAs,    
+                            orderlist: temp,
+                            date: (new Date()).toISOString().substring(0, 19).replace('T', ' ')    
+                            };
+          
+          
+      $.ajax({
+                url: "/checkout",
+                type: "POST",
+                contentType: "application/json",
+                processData: false,
+                data: JSON.stringify(payload),
+                complete: function (data) {
+                    res = data.responseText;
+                    if(res == "ERROR"){
+                        alert("Checkout Error");
+                    }
+
+                    else if(res == "OK"){
+                       sessionStorage.removeItem('cart');
+                       location.href='/Home'; 
+                    }
+                }
+            }); 
+      }
+        
+        
+      </script>
+  </body>
+</html>

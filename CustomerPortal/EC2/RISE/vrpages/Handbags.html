@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <script src="https://aframe.io/releases/0.3.2/aframe.min.js"></script>
+  </head>
+  <body>
+     
+<a-scene>
+     <a-assets>  
+    		<a-asset-item id="asset" src="GucciPink/model.dae">
+            <a-asset-item id="asset1" src="BurberryBag/model.dae">
+             <a-asset-item id="asset2" src="GucciRed/model.dae">   
+            <img id="buy" src="add.png"> 
+  		</a-assets>
+    
+  			<a-collada-model position="0 1.25 0" src="#asset" rotation="0 0 0"></a-collada-model>
+            
+            <a-collada-model position="-3.5 1.25 4" src="#asset1" rotation="0 95 0"></a-collada-model>
+            <a-collada-model position="3.5 1.25 4" src="#asset2" rotation="0 90 0"></a-collada-model>
+         <a-entity position="0 0 3.8">
+             <a-plane rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+        <a-camera>
+            </a-camera>
+      </a-entity>
+</a-scene>
+         
+                  
+  </body>
+</html>

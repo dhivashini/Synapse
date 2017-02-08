@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <script src="https://aframe.io/releases/0.3.2/aframe.min.js"></script>
+  </head>
+  <body>
+     
+<a-scene>
+     <a-assets>  
+    		<a-asset-item id="asset" src="RB1/model.dae">
+
+            <a-asset-item id="asset1" src="graduation.dae">
+            <a-asset-item id="asset2" src="watch.dae">
+            <img id="add" src="add.png"> 
+            <img id="added" src="added.png">
+	    <img id="home" src="homeicon.png"> 
+  		</a-assets>
+    
+                
+            <a-entity sound="src: url(accessory-audio.mp3); autoplay: true"></a-entity>
+  			<a-collada-model position="2.5 0 -7" src="#asset" rotation="0 180 0" scale=".7 .7 .7" sound="src: url(rayban-audio.mp3); on: click">
+           <a-animation attribute="rotation"
+               dur="15000"
+               to="0 538 0"
+               begin="click"            
+               repeat="0"></a-animation></a-collada-model>
+            
+
+            <a-collada-model position="4.5 1 4" src="#asset1" rotation="0 90 0" scale=".1 .1 .1">
+                 <a-animation attribute="rotation"
+               dur="15000"
+               to="0 450 0"
+               begin="click"            
+               repeat="0"></a-animation></a-collada-model></a-collada-model>
+            
+            <a-collada-model position="-3.8 1.5 3" src="#asset2" rotation="270 180 90" scale=".01 .01 .01"></a-collada-model>
+                    <a-image class="buy" id="rayban" src="#add" position="1 2 0"></a-image>
+            <a-image class="buy" id="watch" src="#add" position="-4 2.5 2.5" rotation="0 90 0"></a-image>
+            <a-image class="buy" id="cap" src="#add" position="+4 2 3.5" rotation="0 280 0"></a-image>              
+
+<a-image id="goToHome" src="#home" position="0 .5 0" scale=".5 .5 .5" onClick="location.href='/VRHomePage'"></a-image>
+         <a-entity position="0 0 2.5">
+             <a-plane rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+        <a-camera>
+            <a-cursor></a-cursor>
+            </a-camera>
+      </a-entity>
+</a-scene>
+        
+        <script>
+            
+            var classname = document.getElementsByClassName("buy");
+
+var myFunction = function() {
+    var selectedEle = this.id;
+    var ArrayData;
+       document.getElementById(selectedEle).setAttribute("src","#added");  
+      // cart.push(selectedEle);
+    var storedData = sessionStorage.getItem("cart");
+    console.log("storedData "+storedData);
+    if (storedData) {
+        ArrayData = JSON.parse(storedData);   
+    }
+    ArrayData.push(selectedEle);
+    console.log("JSON.stringify(ArrayData) " +JSON.stringify(ArrayData));
+    sessionStorage.setItem("cart",  JSON.stringify(ArrayData));
+};
+
+for (var i = 0; i < classname.length; i++) {
+    classname[i].addEventListener('click', myFunction, false);
+}
+
+            
+        
+    </script>
+                  
+  </body>
+</html>
